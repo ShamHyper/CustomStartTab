@@ -96,7 +96,7 @@ function search() {
         } else if (duckduckgoCheckbox.checked) {
             searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
         } else {
-            alert('Choose search engine!');
+            alert('Choose search eng!');
             return;
         }
         window.open(searchUrl, '_blank');

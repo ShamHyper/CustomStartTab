@@ -28,17 +28,26 @@ body {
     height: 40px;
     font-size: 18px;
     padding: 5px;
-    border-radius: 5px 0 0 5px; 
-    border: none;
+    border-radius: 10px 0 0 10px; 
     outline: none;
+    background-color: #303030; 
+    color:#ffffff;
+    border-color: #ffffff;
+    
 }
 
 .search-container button {
     height: 40px;
-    border: none;
-    background-color: #007bff; 
-    border-radius: 0 5px 5px 0; 
+    width: 35px;
+    border-color: #ffffff;
+    background-color: #1f1d1d; 
+    border-radius: 0 10px 10px 0; 
     cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #706d6d;
+    transition: background-color 0.2s ease-out;
 }
 
 .search-container button img {
@@ -56,17 +65,53 @@ canvas {
 }
 
 .search-options {
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    position: absolute;
+    top: 56%;
+    left: 49.2%;
+    transform: translate(-50%, -50%);
     align-items: center;
 }
 
 .search-options label {
-    color: white;
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
     font-size: 16px;
+    user-select: none;
+    color: white;
     margin: 5px 0;
+}
+
+.search-options input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.search-options input[type="checkbox"] + span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    background: white;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.search-options input[type="checkbox"] + span:hover{
+    background: rgb(65, 58, 58);
+}
+
+.search-options input[type="checkbox"]:checked + span {
+    background-color: gray;
+    border-color: gray;
+}
+
+.search-options input[type="checkbox"]:checked + span::after {
+    content: '';
+    display: block;
+    width: 10px; 
+    height: 10px; 
+    border: solid white;
 }
