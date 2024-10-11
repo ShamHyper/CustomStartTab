@@ -1,18 +1,18 @@
 {
     "manifest_version": 3,
-
     "name": "Custom Start Tab",
-
     "description": "Custom start tab by ShamHyper",
-
-    "version": "0.2",
-
+    "version": "0.3",
     "action": {
-        "default_popup": "popup.html",
-        "default_icon": "popup.png"
+        "default_popup" : "popup.html",
+        "default_icon": "icon.png" 
     },
-
     "chrome_url_overrides": {
         "newtab": "index.html"
+    },
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
     }
 }
