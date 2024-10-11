@@ -21,7 +21,9 @@ for (let i = 0; i < numStars; i++) {
 function drawStars() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "white";
+    const starColor = localStorage.getItem('starColor') || 'white';
+    ctx.fillStyle = starColor; 
+
     stars.forEach((star) => {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
