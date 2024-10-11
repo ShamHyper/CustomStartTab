@@ -1,3 +1,5 @@
+console.log("Started custom tab")
+
 const canvas = document.getElementById("starry-sky");
 const ctx = canvas.getContext("2d");
 
@@ -42,11 +44,65 @@ document.getElementById('search-input').addEventListener('keypress', function(ev
 
 document.getElementById('search-button').addEventListener('click', search);
 
+const googleCheckbox = document.getElementById('google-checkbox');
+const yandexCheckbox = document.getElementById('yandex-checkbox');
+const duckduckgoCheckbox = document.getElementById('duckduckgo-checkbox');
+
+function loadSearchOptions() {
+    const searchEngine = localStorage.getItem('searchEngine');
+    if (searchEngine === 'google') {
+        googleCheckbox.checked = true;
+    } else if (searchEngine === 'yandex') {
+        yandexCheckbox.checked = true;
+    } else if (searchEngine === 'duckduckgo') {
+        duckduckgoCheckbox.checked = true;
+    }
+}
+
+googleCheckbox.addEventListener('change', () => {
+    if (googleCheckbox.checked) {
+        yandexCheckbox.checked = false;
+        duckduckgoCheckbox.checked = false;
+        saveSearchOption('google');
+    }
+});
+yandexCheckbox.addEventListener('change', () => {
+    if (yandexCheckbox.checked) {
+        googleCheckbox.checked = false;
+        duckduckgoCheckbox.checked = false;
+        saveSearchOption('yandex');
+    }
+});
+duckduckgoCheckbox.addEventListener('change', () => {
+    if (duckduckgoCheckbox.checked) {
+        googleCheckbox.checked = false;
+        yandexCheckbox.checked = false;
+        saveSearchOption('duckduckgo');
+    }
+});
+
+function saveSearchOption(engine) {
+    localStorage.setItem('searchEngine', engine);
+}
+
 function search() {
     const query = document.getElementById('search-input').value;
     if (query) {
-        window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+        let searchUrl;
+        if (googleCheckbox.checked) {
+            searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        } else if (yandexCheckbox.checked) {
+            searchUrl = `https://yandex.ru/search/?from=chromesearch&text=${encodeURIComponent(query)}`;
+        } else if (duckduckgoCheckbox.checked) {
+            searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+        } else {
+            alert('Choose search engine!');
+            return;
+        }
+        window.open(searchUrl, '_blank');
     }
 }
+
+loadSearchOptions();
 
 drawStars();
