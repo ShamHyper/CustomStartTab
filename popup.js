@@ -1,0 +1,1 @@
+console.log("Clicked on extension")
