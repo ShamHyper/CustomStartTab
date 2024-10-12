@@ -1,4 +1,4 @@
-console.log("Started custom tab")
+console.log("Started custom tab");
 
 const canvas = document.getElementById("starry-sky");
 const ctx = canvas.getContext("2d");
@@ -14,7 +14,7 @@ for (let i = 0; i < numStars; i++) {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         radius: Math.random() * 1.5,
-        speed: Math.random() * 0.5 + 0.5,
+        speed: Math.random() * 1 + 0.5, 
     });
 }
 
@@ -37,6 +37,11 @@ function drawStars() {
 
     requestAnimationFrame(drawStars);
 }
+
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
 
 document.getElementById('search-input').addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
@@ -105,6 +110,42 @@ function search() {
     }
 }
 
-loadSearchOptions();
+async function getWeather() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
 
+            const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+            const geocodeData = await geocodeResponse.json();
+            
+            const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown location';
+
+            const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t`);
+            const weatherData = await weatherResponse.text();
+
+            document.getElementById('weather-info').innerText = `${city} | ${weatherData}`;
+        }, (error) => {
+            console.error("Error getting location:", error);
+            document.getElementById('weather-info').innerText = 'Unable to retrieve location.';
+        });
+    } else {
+        document.getElementById('weather-info').innerText = 'Geolocation is not supported by this browser.';
+    }
+}
+
+async function getCurrencyRates() {
+    const cryptoResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,the-open-network&vs_currencies=usd');
+    const cryptoData = await cryptoResponse.json();
+
+    const btcRate = cryptoData.bitcoin?.usd || 'N/A';
+    const ethRate = cryptoData.ethereum?.usd || 'N/A';
+    const tonRate = cryptoData['the-open-network']?.usd || 'N/A';
+
+    document.getElementById('currency-info').innerText = `BTC: $${btcRate} | ETH: $${ethRate} | TON: $${tonRate}`;
+}
+
+getWeather();
+getCurrencyRates();
+loadSearchOptions();
 drawStars();
