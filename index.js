@@ -130,7 +130,7 @@ function getCachedData(key) {
     const cached = localStorage.getItem(key);
     if (cached) {
         const cache = JSON.parse(cached);
-        if (Date.now() < cache.expiration) { 
+        if (Date.now() < cache.expiration) {
             console.log(`${key} retrieved from cache`);
             return cache.data;
         } else {
@@ -148,8 +148,8 @@ async function getWeather() {
         return;
     }
 
-    console.log("Starting navigator")
     if (navigator.geolocation) {
+        console.log("Starting navigator")
         navigator.geolocation.getCurrentPosition(async (position) => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
