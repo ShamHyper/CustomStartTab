@@ -38,6 +38,14 @@ function drawStars() {
     requestAnimationFrame(drawStars);
 }
 
+function applyBackgroundColors() {
+    const topColor = localStorage.getItem('bgTopColor') || '#0e0e0e';
+    const bottomColor = localStorage.getItem('bgBottomColor') || '#1b1b1b';
+    canvas.style.background = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
+}
+
+applyBackgroundColors();
+
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
