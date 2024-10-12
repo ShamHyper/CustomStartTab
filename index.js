@@ -14,7 +14,7 @@ for (let i = 0; i < numStars; i++) {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         radius: Math.random() * 1.5,
-        speed: Math.random() * 1 + 0.5, 
+        speed: Math.random() * 1 + 0.5,
     });
 }
 
@@ -22,7 +22,7 @@ function drawStars() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const starColor = localStorage.getItem('starColor') || 'white';
-    ctx.fillStyle = starColor; 
+    ctx.fillStyle = starColor;
 
     stars.forEach((star) => {
         ctx.beginPath();
@@ -43,7 +43,7 @@ window.addEventListener('resize', () => {
     canvas.height = window.innerHeight;
 });
 
-document.getElementById('search-input').addEventListener('keypress', function(event) {
+document.getElementById('search-input').addEventListener('keypress', function (event) {
     if (event.key === 'Enter') {
         search();
     }
@@ -154,7 +154,7 @@ async function getWeather() {
                 const weatherText = `${city} | ${weatherData}`;
 
                 document.getElementById('weather-info').innerText = weatherText;
-                cacheData('weather', weatherText); 
+                cacheData('weather', weatherText);
             } catch (error) {
                 console.error("Error fetching weather data:", error);
                 document.getElementById('weather-info').innerText = 'Error retrieving weather.';
@@ -185,7 +185,7 @@ async function getCurrencyRates() {
 
         const ratesText = `BTC: $${btcRate} | ETH: $${ethRate} | TON: $${tonRate}`;
         document.getElementById('currency-info').innerText = ratesText;
-        cacheData('currencyRates', ratesText); 
+        cacheData('currencyRates', ratesText);
     } catch (error) {
         console.error("Error fetching currency rates:", error);
         document.getElementById('currency-info').innerText = 'Error retrieving currency rates.';
@@ -203,7 +203,6 @@ function updateTime() {
     document.getElementById('time-display').innerText = `${hours}:${minutes}:${seconds}`;
     document.getElementById('date-display').innerText = `${day}.${month}.${year}`;
 }
-
 
 setInterval(updateTime, 1000);
 updateTime();

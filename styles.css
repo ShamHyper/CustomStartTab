@@ -73,7 +73,7 @@ canvas {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: linear-gradient(to bottom, #0e0e0e, #1b1b1b);
+    background: linear-gradient(to bottom, #0e0e0e, #1b1b1b); 
 }
 
 .search-options {
@@ -123,13 +123,14 @@ canvas {
     border-radius: 2px;
 }
 
-.search-label { 
+.search-label {
     transition: transform 0.25s ease;
 }
 
-.search-label:hover { 
-    transform:scale(115%);
+.search-label:hover {
+    transform: scale(115%);
 }
+
 .search-options span:hover {
     background-color: #acacac;
 }
@@ -142,7 +143,8 @@ canvas {
     right: 10px;
 }
 
-.weather-info, .currency-info {
+.weather-info,
+.currency-info {
     position: absolute;
     top: 10px;
     background: #303134;
@@ -153,22 +155,21 @@ canvas {
 }
 
 .time-container {
-    font-size: 45px; 
-    color: #fff; 
-    position: absolute; 
-    top: 330px;
-    left: 50%; 
-    transform: translateX(-50%); 
-    text-align: center; 
+    font-size: 45px;
+    color: #fff;
+    position: absolute;
+    top: 335px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
 }
 
 .date-container {
-    font-size: 20px; 
-    color: #fff; 
-    position: absolute; 
-    top: 385px;
-    left: 50%; 
-    transform: translateX(-50%); 
-    text-align: center; 
+    font-size: 18px;
+    color: #fff;
+    position: absolute;
+    top: 390px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
 }
-

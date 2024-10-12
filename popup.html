@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Start Tab</title>
     <link rel="stylesheet" href="popup.css">
 </head>
+
 <body>
-    <h1>Change stars color</h1>
+    <label for="colorPicker">Star color:</label>
     <input type="color" id="colorPicker" value="#ffffff">
-    <button id="applyColor">Apply color</button>
     
+    <label for="bgTopColor">Top background color:</label>
+    <input type="color" id="bgTopColor" value="#0e0e0e">
+
+    <label for="bgBottomColor">Bottom background color:</label>
+    <input type="color" id="bgBottomColor" value="#1b1b1b">
+
+    <button id="applyColor">Apply colors</button>
+
     <script src="popup.js"></script>
 </body>
+
 </html>
