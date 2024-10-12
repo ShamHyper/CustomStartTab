@@ -130,7 +130,7 @@ function getCachedData(key) {
     const cached = localStorage.getItem(key);
     if (cached) {
         const cache = JSON.parse(cached);
-        if (Date.now() < cache.expiration) {
+        if (Date.now() == cache.expiration) { ////////////////////////////////
             console.log(`${key} retrieved from cache`);
             return cache.data;
         } else {
@@ -141,32 +141,19 @@ function getCachedData(key) {
 }
 
 async function getWeather() {
+    console.log("Starting getWeather")
     const cachedWeather = getCachedData('weather');
     if (cachedWeather) {
         document.getElementById('weather-info').innerText = cachedWeather;
         return;
     }
 
+    console.log("Starting navigator")
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-
-            try {
-                const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
-                const geocodeData = await geocodeResponse.json();
-                const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown location';
-
-                const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t`);
-                const weatherData = await weatherResponse.text();
-                const weatherText = `${city} | ${weatherData}`;
-
-                document.getElementById('weather-info').innerText = weatherText;
-                cacheData('weather', weatherText);
-            } catch (error) {
-                console.error("Error fetching weather data:", error);
-                document.getElementById('weather-info').innerText = 'Error retrieving weather.';
-            }
+            await fetchWeatherData(lat, lon);
         }, (error) => {
             console.error("Error getting location:", error);
             document.getElementById('weather-info').innerText = 'Unable to retrieve location.';
@@ -174,6 +161,29 @@ async function getWeather() {
     } else {
         document.getElementById('weather-info').innerText = 'Geolocation is not supported by this browser.';
     }
+}
+
+async function fetchWeatherData(lat, lon) {
+    console.log("Fetching WeatherData")
+    try {
+        console.log("Openning opensteetmap")
+        const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+        console.log("Responsing geocode")
+        const geocodeData = await geocodeResponse.json();
+        const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown location';
+
+        console.log("Fetching wttr")
+        const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t`);
+        const weatherData = await weatherResponse.text();
+        const weatherText = `${city} | ${weatherData}`;
+
+        document.getElementById('weather-info').innerText = weatherText;
+        cacheData('weather', weatherText);
+    } catch (error) {
+        console.error("Error fetching weather data:", error);
+        document.getElementById('weather-info').innerText = 'Error retrieving weather.';
+    }
+    console.log("Weather widget loaded")
 }
 
 async function getCurrencyRates() {
@@ -198,6 +208,7 @@ async function getCurrencyRates() {
         console.error("Error fetching currency rates:", error);
         document.getElementById('currency-info').innerText = 'Error retrieving currency rates.';
     }
+    console.log("Currency widget loaded")
 }
 
 function updateTime() {
