@@ -25,16 +25,28 @@ label {
 }
 
 button {
-    background-color: #61dafb;
     border: none;
     color: black;
     padding: 10px 15px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s ease;
+    margin-top: auto;
 }
 
-button:hover {
-    background-color: #21a1f1;
+#applyColor {
+    background-color: #ffffff;
+}
+
+#restoreDefaults {
+    background-color: #777777;
+}
+
+#applyColor:hover {
+    background-color: #00c3ff;
+}
+
+#restoreDefaults:hover {
+    background-color: #ff0000;
 }

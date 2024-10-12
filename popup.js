@@ -11,8 +11,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const canvas = document.querySelector('canvas');
         if (canvas) {
             canvas.style.background = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
-        } else {
-            console.error('Canvas element not found');
+        }
+
+        chrome.runtime.sendMessage({ action: "reloadTab" }, (response) => {
+            console.log(response.status);
+        });
+    });
+
+    document.getElementById('restoreDefaults').addEventListener('click', () => {
+        const defaultStarColor = '#ffffff';
+        const defaultTopColor = '#0e0e0e';
+        const defaultBottomColor = '#1b1b1b';
+
+        localStorage.setItem('starColor', defaultStarColor);
+        localStorage.setItem('bgTopColor', defaultTopColor);
+        localStorage.setItem('bgBottomColor', defaultBottomColor);
+        
+        document.getElementById('colorPicker').value = defaultStarColor;
+        document.getElementById('bgTopColor').value = defaultTopColor;
+        document.getElementById('bgBottomColor').value = defaultBottomColor;
+
+        const canvas = document.querySelector('canvas');
+        if (canvas) {
+            canvas.style.background = `linear-gradient(to bottom, ${defaultTopColor}, ${defaultBottomColor})`;
         }
     });
 
