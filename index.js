@@ -118,7 +118,7 @@ function search() {
     }
 }
 
-function cacheData(key, data, expiration = 5 * 60 * 1000) {
+function cacheData(key, data, expiration) {
     const cache = {
         data,
         expiration: Date.now() + expiration
@@ -130,7 +130,7 @@ function getCachedData(key) {
     const cached = localStorage.getItem(key);
     if (cached) {
         const cache = JSON.parse(cached);
-        if (Date.now() == cache.expiration) { ////////////////////////////////
+        if (Date.now() < cache.expiration) { 
             console.log(`${key} retrieved from cache`);
             return cache.data;
         } else {
@@ -164,9 +164,18 @@ async function getWeather() {
 }
 
 async function fetchWeatherData(lat, lon) {
-    console.log("Fetching WeatherData")
+    const cacheKey = 'geocodeResponse';
+    const cachedGeocode = getCachedData(cacheKey);
+
+    if (cachedGeocode) {
+        const city = cachedGeocode.city || 'Unknown location';
+        const weatherText = `${city} | ${cachedGeocode.weather}`;
+        document.getElementById('weather-info').innerText = weatherText;
+        return;
+    }
+
     try {
-        console.log("Openning opensteetmap")
+        console.log("Fetching geocode")
         const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
         console.log("Responsing geocode")
         const geocodeData = await geocodeResponse.json();
@@ -177,14 +186,16 @@ async function fetchWeatherData(lat, lon) {
         const weatherData = await weatherResponse.text();
         const weatherText = `${city} | ${weatherData}`;
 
+        cacheData(cacheKey, { city, weather: weatherData }, 3600000);
         document.getElementById('weather-info').innerText = weatherText;
-        cacheData('weather', weatherText);
+        cacheData('weather', weatherText, 60000);
     } catch (error) {
         console.error("Error fetching weather data:", error);
         document.getElementById('weather-info').innerText = 'Error retrieving weather.';
     }
     console.log("Weather widget loaded")
 }
+
 
 async function getCurrencyRates() {
     const cachedRates = getCachedData('currencyRates');
@@ -203,7 +214,7 @@ async function getCurrencyRates() {
 
         const ratesText = `BTC: $${btcRate} | ETH: $${ethRate} | TON: $${tonRate}`;
         document.getElementById('currency-info').innerText = ratesText;
-        cacheData('currencyRates', ratesText);
+        cacheData('currencyRates', ratesText, 300000);
     } catch (error) {
         console.error("Error fetching currency rates:", error);
         document.getElementById('currency-info').innerText = 'Error retrieving currency rates.';
