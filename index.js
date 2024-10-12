@@ -103,28 +103,62 @@ function search() {
         } else if (duckduckgoCheckbox.checked) {
             searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
         } else {
-            alert('Choose search eng!');
+            alert('Choose search engine!');
             return;
         }
         window.open(searchUrl, '_blank');
     }
 }
 
+function cacheData(key, data, expiration = 5 * 60 * 1000) {
+    const cache = {
+        data,
+        expiration: Date.now() + expiration
+    };
+    localStorage.setItem(key, JSON.stringify(cache));
+}
+
+function getCachedData(key) {
+    const cached = localStorage.getItem(key);
+    if (cached) {
+        const cache = JSON.parse(cached);
+        if (Date.now() < cache.expiration) {
+            console.log(`${key} retrieved from cache`);
+            return cache.data;
+        } else {
+            localStorage.removeItem(key);
+        }
+    }
+    return null;
+}
+
 async function getWeather() {
+    const cachedWeather = getCachedData('weather');
+    if (cachedWeather) {
+        document.getElementById('weather-info').innerText = cachedWeather;
+        return;
+    }
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
 
-            const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
-            const geocodeData = await geocodeResponse.json();
-            
-            const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown location';
+            try {
+                const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+                const geocodeData = await geocodeResponse.json();
+                const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown location';
 
-            const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t`);
-            const weatherData = await weatherResponse.text();
+                const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t`);
+                const weatherData = await weatherResponse.text();
+                const weatherText = `${city} | ${weatherData}`;
 
-            document.getElementById('weather-info').innerText = `${city} | ${weatherData}`;
+                document.getElementById('weather-info').innerText = weatherText;
+                cacheData('weather', weatherText); 
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+                document.getElementById('weather-info').innerText = 'Error retrieving weather.';
+            }
         }, (error) => {
             console.error("Error getting location:", error);
             document.getElementById('weather-info').innerText = 'Unable to retrieve location.';
@@ -135,16 +169,44 @@ async function getWeather() {
 }
 
 async function getCurrencyRates() {
-    const cryptoResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,the-open-network&vs_currencies=usd');
-    const cryptoData = await cryptoResponse.json();
+    const cachedRates = getCachedData('currencyRates');
+    if (cachedRates) {
+        document.getElementById('currency-info').innerText = cachedRates;
+        return;
+    }
 
-    const btcRate = cryptoData.bitcoin?.usd || 'N/A';
-    const ethRate = cryptoData.ethereum?.usd || 'N/A';
-    const tonRate = cryptoData['the-open-network']?.usd || 'N/A';
+    try {
+        const cryptoResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,the-open-network&vs_currencies=usd');
+        const cryptoData = await cryptoResponse.json();
 
-    document.getElementById('currency-info').innerText = `BTC: $${btcRate} | ETH: $${ethRate} | TON: $${tonRate}`;
+        const btcRate = cryptoData.bitcoin?.usd || 'N/A';
+        const ethRate = cryptoData.ethereum?.usd || 'N/A';
+        const tonRate = cryptoData['the-open-network']?.usd || 'N/A';
+
+        const ratesText = `BTC: $${btcRate} | ETH: $${ethRate} | TON: $${tonRate}`;
+        document.getElementById('currency-info').innerText = ratesText;
+        cacheData('currencyRates', ratesText); 
+    } catch (error) {
+        console.error("Error fetching currency rates:", error);
+        document.getElementById('currency-info').innerText = 'Error retrieving currency rates.';
+    }
 }
 
+function updateTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = String(now.getFullYear()).padStart(2, '0');
+    document.getElementById('time-display').innerText = `${hours}:${minutes}:${seconds}`;
+    document.getElementById('date-display').innerText = `${day}.${month}.${year}`;
+}
+
+
+setInterval(updateTime, 1000);
+updateTime();
 getWeather();
 getCurrencyRates();
 loadSearchOptions();

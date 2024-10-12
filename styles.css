@@ -8,6 +8,7 @@ body {
     font-family: Arial, sans-serif;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #202124;
@@ -78,9 +79,9 @@ canvas {
 .search-options {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
     position: absolute;
-    top: 65%;
+    top: 55%;
     z-index: 10;
 }
 
@@ -106,12 +107,12 @@ canvas {
     background-color: #303134;
     margin-right: 8px;
     border: 1px solid #9aa0a6;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 
 .search-options input[type="checkbox"]:checked+span {
-    background-color: #8ab4f8;
-    border-color: #8ab4f8;
+    background-color: #252525;
+    border-color: #3b3b3b;
 }
 
 .search-options input[type="checkbox"]:checked+span::after {
@@ -122,21 +123,52 @@ canvas {
     border-radius: 2px;
 }
 
+.search-label { 
+    transition: transform 0.25s ease;
+}
+
+.search-label:hover { 
+    transform:scale(115%);
+}
+.search-options span:hover {
+    background-color: #acacac;
+}
+
 .weather-info {
-    position: absolute;
-    top: 10px;
     left: 10px;
-    background: #303134;
-    padding: 5px;
-    border-radius: 5px;
-    color: #9aa0a6;
 }
+
 .currency-info {
+    right: 10px;
+}
+
+.weather-info, .currency-info {
     position: absolute;
     top: 10px;
-    right: 10px;
     background: #303134;
     padding: 5px;
     border-radius: 5px;
     color: #9aa0a6;
+    font-size: 14px;
 }
+
+.time-container {
+    font-size: 45px; 
+    color: #fff; 
+    position: absolute; 
+    top: 330px;
+    left: 50%; 
+    transform: translateX(-50%); 
+    text-align: center; 
+}
+
+.date-container {
+    font-size: 20px; 
+    color: #fff; 
+    position: absolute; 
+    top: 385px;
+    left: 50%; 
+    transform: translateX(-50%); 
+    text-align: center; 
+}
+

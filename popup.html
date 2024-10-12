@@ -4,54 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Start Tab</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 200px;
-            width: 300px;
-            background-color: #282c34;
-            color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        input[type="color"] {
-            width: 100px;
-            height: 40px;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        button {
-            background-color: #61dafb;
-            border: none;
-            color: black;
-            padding: 10px 15px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #21a1f1;
-        }
-    </style>
+    <link rel="stylesheet" href="popup.css">
 </head>
 <body>
     <h1>Change stars color</h1>
     <input type="color" id="colorPicker" value="#ffffff">
     <button id="applyColor">Apply color</button>
+    
     <script src="popup.js"></script>
 </body>
 </html>
