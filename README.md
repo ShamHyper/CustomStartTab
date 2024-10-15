@@ -11,7 +11,7 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 2. Enable developer mode in the upper right corner
 3. Download [latest](https://github.com/ShamHyper/CustomStartTab/archive/refs/heads/main.zip) archive with code **OR** use git to download
 4. Unzip the archive to any location so as not to accidentally delete the folder with the extension
-5. On `chrome://extensions/` click on **load unpacked extension** button and select the folder with the code
+5. On `chrome://extensions/` click on **load unpacked extension** button and select the chrome extension folder (`./CustomStartTab/chrome`) with the code
 6. Configurate extension according to your taste:
 
 ![Settings preview](https://i.imghippo.com/files/z6nsY1729003954.png)
