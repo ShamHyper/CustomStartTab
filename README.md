@@ -15,6 +15,12 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 6. Configurate extension according to your taste:
 
 ![Settings preview](https://i124.fastpic.org/big/2024/1015/1a/2d59968078ae4466379713a7a86a201a.png?md5=4YfklMkjpyEXIMYwXqY_UQ&expires=1728961200)
+## Compatibility
+**Google Chrome:**
+- Everything is working and tested
+
+**[BETA]Firefox:** 
+- Pending release in the Firefox add-on store
 ## Gallery
 ![Preview](https://i124.fastpic.org/big/2024/1015/14/_b4cbc415e8b08fa5b6d83e1b38cf0914.png?md5=E8J1bcdcfzKlJpViK8ZLGw&expires=1728961200)
 ## License
