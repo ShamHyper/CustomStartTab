@@ -59,72 +59,48 @@ document.getElementById('search-input').addEventListener('keypress', function (e
 
 document.getElementById('search-button').addEventListener('click', search);
 
-const googleCheckbox = document.getElementById('google-checkbox');
-const yandexCheckbox = document.getElementById('yandex-checkbox');
-const duckduckgoCheckbox = document.getElementById('duckduckgo-checkbox');
-const perplexityCheckbox = document.getElementById('perplexity-checkbox');
+const checkboxes = {
+    google: document.getElementById('google-checkbox'),
+    yandex: document.getElementById('yandex-checkbox'),
+    duckduckgo: document.getElementById('duckduckgo-checkbox'),
+    perplexity: document.getElementById('perplexity-checkbox')
+};
 
 function loadSearchOptions() {
-    const searchEngine = localStorage.getItem('searchEngine');
-    if (searchEngine === 'google') {
-        googleCheckbox.checked = true;
-    } else if (searchEngine === 'yandex') {
-        yandexCheckbox.checked = true;
-    } else if (searchEngine === 'duckduckgo') {
-        duckduckgoCheckbox.checked = true;
-    } else if (searchEngine === 'perplexity') {
-        perplexityCheckbox.checked = true;
-    }
+    const searchEngine = localStorage.getItem('searchEngine') || 'google';
+    checkboxes[searchEngine].checked = true;
 }
 
-googleCheckbox.addEventListener('change', () => {
-    if (googleCheckbox.checked) {
-        yandexCheckbox.checked = false;
-        duckduckgoCheckbox.checked = false;
-        perplexityCheckbox.checked = false;
-        saveSearchOption('google');
-    }
-});
-yandexCheckbox.addEventListener('change', () => {
-    if (yandexCheckbox.checked) {
-        googleCheckbox.checked = false;
-        duckduckgoCheckbox.checked = false;
-        perplexityCheckbox.checked = false;
-        saveSearchOption('yandex');
-    }
-});
-duckduckgoCheckbox.addEventListener('change', () => {
-    if (duckduckgoCheckbox.checked) {
-        googleCheckbox.checked = false;
-        yandexCheckbox.checked = false;
-        perplexityCheckbox.checked = false;
-        saveSearchOption('duckduckgo');
-    }
-});
-perplexityCheckbox.addEventListener('change', () => {
-    if (perplexityCheckbox.checked) {
-        googleCheckbox.checked = false;
-        yandexCheckbox.checked = false;
-        duckduckgoCheckbox.checked = false;
-        saveSearchOption('perplexity');
-    }
+Object.keys(checkboxes).forEach(engine => {
+    checkboxes[engine].addEventListener('change', () => {
+        if (checkboxes[engine].checked) {
+            Object.keys(checkboxes).forEach(otherEngine => {
+                if (otherEngine !== engine) {
+                    checkboxes[otherEngine].checked = false;
+                }
+            });
+            saveSearchOption(engine);
+        }
+    });
 });
 
 function saveSearchOption(engine) {
     localStorage.setItem('searchEngine', engine);
 }
 
+document.addEventListener('DOMContentLoaded', loadSearchOptions);
+
 function search() {
     const query = document.getElementById('search-input').value;
     if (query) {
         let searchUrl;
-        if (googleCheckbox.checked) {
+        if (checkboxes.google.checked) {
             searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-        } else if (yandexCheckbox.checked) {
+        } else if (checkboxes.yandex.checked) {
             searchUrl = `https://yandex.ru/search/?from=chromesearch&text=${encodeURIComponent(query)}`;
-        } else if (duckduckgoCheckbox.checked) {
+        } else if (checkboxes.duckduckgo.checked) {
             searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-        } else if (perplexityCheckbox.checked) {
+        } else if (checkboxes.perplexity.checked) {
             searchUrl = `https://www.perplexity.ai/?q=${encodeURIComponent(query)}`;
         } else {
             alert('Choose search engine!');
