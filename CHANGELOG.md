@@ -1,4 +1,7 @@
 # Changelog
+## 1.9.x
+- Source button in popup
+- New CSS style
 ## 1.8.x
 - Firefox сompatibility update
 - Search engine function optimization
