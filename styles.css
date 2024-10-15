@@ -105,7 +105,7 @@ canvas {
     height: 18px;
     border-radius: 4px;
     background-color: #303134;
-    margin-right: 8px;
+    margin-right: 4px;
     border: 1px solid #9aa0a6;
     transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }

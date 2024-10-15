@@ -62,6 +62,7 @@ document.getElementById('search-button').addEventListener('click', search);
 const googleCheckbox = document.getElementById('google-checkbox');
 const yandexCheckbox = document.getElementById('yandex-checkbox');
 const duckduckgoCheckbox = document.getElementById('duckduckgo-checkbox');
+const perplexityCheckbox = document.getElementById('perplexity-checkbox');
 
 function loadSearchOptions() {
     const searchEngine = localStorage.getItem('searchEngine');
@@ -71,6 +72,8 @@ function loadSearchOptions() {
         yandexCheckbox.checked = true;
     } else if (searchEngine === 'duckduckgo') {
         duckduckgoCheckbox.checked = true;
+    } else if (searchEngine === 'perplexity') {
+        perplexityCheckbox.checked = true;
     }
 }
 
@@ -78,6 +81,7 @@ googleCheckbox.addEventListener('change', () => {
     if (googleCheckbox.checked) {
         yandexCheckbox.checked = false;
         duckduckgoCheckbox.checked = false;
+        perplexityCheckbox.checked = false;
         saveSearchOption('google');
     }
 });
@@ -85,6 +89,7 @@ yandexCheckbox.addEventListener('change', () => {
     if (yandexCheckbox.checked) {
         googleCheckbox.checked = false;
         duckduckgoCheckbox.checked = false;
+        perplexityCheckbox.checked = false;
         saveSearchOption('yandex');
     }
 });
@@ -92,7 +97,16 @@ duckduckgoCheckbox.addEventListener('change', () => {
     if (duckduckgoCheckbox.checked) {
         googleCheckbox.checked = false;
         yandexCheckbox.checked = false;
+        perplexityCheckbox.checked = false;
         saveSearchOption('duckduckgo');
+    }
+});
+perplexityCheckbox.addEventListener('change', () => {
+    if (perplexityCheckbox.checked) {
+        googleCheckbox.checked = false;
+        yandexCheckbox.checked = false;
+        duckduckgoCheckbox.checked = false;
+        saveSearchOption('perplexity');
     }
 });
 
@@ -110,6 +124,8 @@ function search() {
             searchUrl = `https://yandex.ru/search/?from=chromesearch&text=${encodeURIComponent(query)}`;
         } else if (duckduckgoCheckbox.checked) {
             searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+        } else if (perplexityCheckbox.checked) {
+            searchUrl = `https://www.perplexity.ai/?q=${encodeURIComponent(query)}`;
         } else {
             alert('Choose search engine!');
             return;
@@ -131,7 +147,7 @@ function getCachedData(key) {
     if (cached) {
         const cache = JSON.parse(cached);
         if (Date.now() < cache.expiration) {
-            console.log(`${key} retrieved from cache`);
+            console.log(`[CACHE] ${key} retrieved from cache`);
             return cache.data;
         } else {
             localStorage.removeItem(key);
@@ -186,7 +202,7 @@ async function fetchWeatherData(lat, lon) {
 
     try {
         console.log("Fetching geocode");
-        const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+        const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en`);
         const geocodeData = await geocodeResponse.json();
         const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown location';
 
@@ -201,7 +217,7 @@ async function fetchWeatherData(lat, lon) {
 
 async function updateWeatherData(lat, lon, city, weatherCacheKey) {
     try {
-        const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t`);
+        const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t&lang=en`);
         const weatherData = await weatherResponse.text();
         const weatherText = `${city} | ${weatherData}`;
 
