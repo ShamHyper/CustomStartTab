@@ -1,5 +1,6 @@
 # Changelog
 ## 1.8.x
+- Firefox сompatibility update
 - Search engine function optimization
 ## 1.7.x
 - Added perplexity ai search engine

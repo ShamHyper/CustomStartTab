@@ -16,10 +16,10 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 
 ![Settings preview](https://i.imghippo.com/files/z6nsY1729003954.png)
 ## Compatibility
-**Google Chrome:**
+**Google Chrome | Latest**
 - Everything is working and tested
 
-**[BETA]Firefox:** 
+**Firefox | 1.8.1** 
 - Available for download in [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
 - Color changing broken. Pending updates
 ## Gallery

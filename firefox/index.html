@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⭐Star-tab⭐</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+
+<body>
+    <div class="time-container" id="time-display">00:00:00</div>
+    <div class="date-container" id="date-display">00.00.00</div>
+
+    <div class="search-container">
+        <input type="text" id="search-input" autocomplete="off" autocorrect="off" placeholder="Search...">
+        <button id="search-button"><img src="search.png" alt="Search"></button>
+    </div>
+
+    <div class="search-options">
+        <label class="search-label">
+            <input type="checkbox" id="google-checkbox">
+            <span></span> Google
+        </label>
+        <label class="search-label">
+            <input type="checkbox" id="yandex-checkbox">
+            <span></span> Yandex
+        </label>
+        <label class="search-label">
+            <input type="checkbox" id="duckduckgo-checkbox">
+            <span></span> DuckDuckGo
+        </label>
+        <label class="search-label">
+            <input type="checkbox" id="perplexity-checkbox">
+            <span></span> Perplexity AI
+        </label>
+    </div>
+
+    <div class="weather-info" id="weather-info">
+        Loading weather...
+    </div>
+    <div class="currency-info" id="currency-info">
+        Loading currency rates...
+    </div>
+    <canvas id="starry-sky"></canvas>
+    <script src="index.js"></script>
+</body>
+
+</html>

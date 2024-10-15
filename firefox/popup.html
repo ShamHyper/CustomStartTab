@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Start Tab</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <label for="starR">Star color (RGB):</label>
+    <div class="color-inputs">
+        <input type="number" id="starR" min="0" max="255" placeholder="R">
+        <input type="number" id="starG" min="0" max="255" placeholder="G">
+        <input type="number" id="starB" min="0" max="255" placeholder="B">
+    </div>
+    
+    <label for="topR">Top background color (RGB):</label>
+    <div class="color-inputs">
+        <input type="number" id="topR" min="0" max="255" placeholder="R">
+        <input type="number" id="topG" min="0" max="255" placeholder="G">
+        <input type="number" id="topB" min="0" max="255" placeholder="B">
+    </div>
+    
+    <label for="bottomR">Bottom background color (RGB):</label>
+    <div class="color-inputs">
+        <input type="number" id="bottomR" min="0" max="255" placeholder="R">
+        <input type="number" id="bottomG" min="0" max="255" placeholder="G">
+        <input type="number" id="bottomB" min="0" max="255" placeholder="B">
+    </div>
+    
+    <button id="applyColor">Apply colors</button>
+    <button id="restoreDefaults">Restore defaults</button>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
