@@ -14,14 +14,15 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 5. On `chrome://extensions/` click on **load unpacked extension** button and select the folder with the code
 6. Configurate extension according to your taste:
 
-![Settings preview](https://i124.fastpic.org/big/2024/1015/1a/2d59968078ae4466379713a7a86a201a.png?md5=4YfklMkjpyEXIMYwXqY_UQ&expires=1728961200)
+![Settings preview](https://www.imghippo.com/i/z6nsY1729003954.png)
 ## Compatibility
 **Google Chrome:**
 - Everything is working and tested
 
 **[BETA]Firefox:** 
-- Pending release in the Firefox add-on store
+- Available for download in [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
+- Color changing broken. Pending updates
 ## Gallery
-![Preview](https://i124.fastpic.org/big/2024/1015/14/_b4cbc415e8b08fa5b6d83e1b38cf0914.png?md5=E8J1bcdcfzKlJpViK8ZLGw&expires=1728961200)
+![Preview](https://www.imghippo.com/i/SWWeX1729003938.png)
 ## License
 MIT license | Copyright (c) 2023-2024 ShamHyper
