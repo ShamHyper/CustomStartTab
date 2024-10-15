@@ -14,7 +14,7 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 5. On `chrome://extensions/` click on **load unpacked extension** button and select the folder with the code
 6. Configurate extension according to your taste:
 
-![Settings preview](https://www.imghippo.com/i/z6nsY1729003954.png)
+![Settings preview](https://i.imghippo.com/files/z6nsY1729003954.png)
 ## Compatibility
 **Google Chrome:**
 - Everything is working and tested
@@ -23,6 +23,6 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 - Available for download in [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
 - Color changing broken. Pending updates
 ## Gallery
-![Preview](https://www.imghippo.com/i/SWWeX1729003938.png)
+![Preview](https://i.imghippo.com/files/SWWeX1729003938.png)
 ## License
 MIT license | Copyright (c) 2023-2024 ShamHyper
