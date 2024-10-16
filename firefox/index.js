@@ -41,27 +41,30 @@ function drawStarsAndPlanets() {
     const starColor = localStorage.getItem('starColor') || 'white';
     const fadeStartHeight = canvas.height * 0.9;
 
-    stars.forEach((star) => {
-        let fadeOutFactor = 1;
+    const showStars = localStorage.getItem('showStars') != 'true';
+    if (showStars) {
+        stars.forEach((star) => {
+            let fadeOutFactor = 1;
 
-        if (star.y > fadeStartHeight) {
-            fadeOutFactor = Math.max(0, 1 - ((star.y - fadeStartHeight) / (canvas.height - fadeStartHeight)));
-        }
+            if (star.y > fadeStartHeight) {
+                fadeOutFactor = Math.max(0, 1 - ((star.y - fadeStartHeight) / (canvas.height - fadeStartHeight)));
+            }
 
-        ctx.globalAlpha = fadeOutFactor;
-        ctx.fillStyle = starColor;
-        ctx.shadowBlur = 5;
-        ctx.shadowColor = starColor;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fill();
+            ctx.globalAlpha = fadeOutFactor;
+            ctx.fillStyle = starColor;
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = starColor;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fill();
 
-        star.y += star.speed;
-        if (star.y > canvas.height) {
-            star.y = -star.radius;
-            star.x = Math.random() * canvas.width;
-        }
-    });
+            star.y += star.speed;
+            if (star.y > canvas.height) {
+                star.y = -star.radius;
+                star.x = Math.random() * canvas.width;
+            }
+        });
+    }
 
     const showPlanets = localStorage.getItem('showPlanets') != 'true';
     if (showPlanets) {
@@ -196,7 +199,7 @@ function getCachedData(key) {
 }
 
 async function getWeather() {
-    console.log("Starting getWeather")
+    console.log("Starting getWeather");
     const cacheKey = 'weather';
     const cachedWeather = getCachedData(cacheKey);
     
@@ -206,7 +209,7 @@ async function getWeather() {
     }
 
     if (navigator.geolocation) {
-        console.log("Starting navigator")
+        console.log("Starting navigator");
         navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
             await fetchWeatherData(latitude, longitude);
@@ -234,10 +237,13 @@ async function fetchWeatherData(lat, lon) {
         console.log("Fetching geocode");
         const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en`);
         const geocodeData = await geocodeResponse.json();
-        const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown location';
-
+    
+        const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || geocodeData.address.municipality || geocodeData.address.state || geocodeData.address.country || 'Unknown location';
+        console.log("Detected city:", city);
+    
         await updateWeatherData(lat, lon, city);
-    } catch {
+    } catch (error) {
+        console.error(error); 
         document.getElementById('weather-info').innerText = 'Error retrieving weather.';
     }
     console.log("Weather widget loaded");
@@ -247,12 +253,53 @@ async function updateWeatherData(lat, lon, city) {
     try {
         const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t&lang=en`);
         const weatherData = await weatherResponse.text();
-        updateWeatherDisplay(city, weatherData);
-        cacheData('geocodeResponse', { city, weather: weatherData }, 3600000);
-        cacheData('weather', `${city} | ${weatherData}`, 60000);
+        
+        if (weatherData.includes('Unknown location')) {
+            console.warn("Unknown location in wttr API, using open-meteo")
+            const openMeteoResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+            const openMeteoData = await openMeteoResponse.json();
+            const temperature = openMeteoData.current_weather.temperature;
+            const weatherCode = openMeteoData.current_weather.weathercode; 
+
+            const weatherDescription = getWeatherDescription(weatherCode);
+
+            const openMeteoWeather = `${weatherDescription}, ${temperature}°C`;
+            updateWeatherDisplay(city, openMeteoWeather);
+            cacheData('geocodeResponse', { city, weather: openMeteoWeather }, 3600000);
+            cacheData('weather', `${city} | ${openMeteoWeather}`, 60000);
+        } else {
+            updateWeatherDisplay(city, weatherData);
+            cacheData('geocodeResponse', { city, weather: weatherData }, 3600000);
+            cacheData('weather', `${city} | ${weatherData}`, 60000);
+        }
     } catch {
         document.getElementById('weather-info').innerText = 'Error retrieving weather.';
+        console.error("Error retrieving weather")
     }
+}
+
+function getWeatherDescription(code) {
+    const descriptions = {
+        0: 'Clear sky',
+        1: 'Mainly clear',
+        2: 'Partly cloudy',
+        3: 'Overcast',
+        45: 'Fog',
+        48: 'Depositing rime fog',
+        51: 'Light drizzle',
+        53: 'Moderate drizzle',
+        55: 'Dense drizzle',
+        61: 'Slight rain',
+        63: 'Moderate rain',
+        65: 'Heavy rain',
+        71: 'Slight snow fall',
+        73: 'Moderate snow fall',
+        75: 'Heavy snow fall',
+        95: 'Thunderstorm',
+        99: 'Thunderstorm with hail'
+    };
+    
+    return descriptions[code] || 'Unknown weather condition';
 }
 
 function updateWeatherDisplay(city, weather) {

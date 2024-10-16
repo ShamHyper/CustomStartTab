@@ -2,6 +2,8 @@
 ## 1.11.x
 - Added planets
 - Animations optimization for Firefox
+- Stars toggle checkbox
+- Second weather API, in case of a WTTR crash
 ## 1.10.x
 - Updated animations
 - New project icon

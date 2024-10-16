@@ -54,6 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('planetToggle').checked = false;
         localStorage.setItem('showPlanets', false);
+        document.getElementById('starsToggle').checked = false;
+        localStorage.setItem('showStars', false);
     });
 
     const savedStarColor = localStorage.getItem('starColor') || 'rgb(255, 255, 255)';
@@ -70,5 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('planetToggle').addEventListener('change', (event) => {
         localStorage.setItem('showPlanets', event.target.checked);
         localStorage.setItem('showPlanets', event.target.checked);
+    });
+
+    const showStars = localStorage.getItem('showStars') === 'true';
+    document.getElementById('starsToggle').checked = showStars;
+
+    document.getElementById('starsToggle').addEventListener('change', (event) => {
+        localStorage.setItem('showStars', event.target.checked);
     });
 });
