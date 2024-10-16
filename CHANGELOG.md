@@ -4,6 +4,7 @@
 - New project icon
 - Optimizations of index.js
 - Added footer
+- Improved compatibility with non-standard screen extension
 ## 1.9.x
 - Source button in popup
 - New CSS style

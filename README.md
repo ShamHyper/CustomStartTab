@@ -13,12 +13,12 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 4. Unzip the archive to any location so as not to accidentally delete the folder with the extension
 5. On `chrome://extensions/` click on **load unpacked extension** button and select the chrome extension folder (`./CustomStartTab/chrome`) with the code
 6. You can delete all other files and folders, and keep only the (`./CustomStartTab/chrome`) folder.
-7. Configurate extension according to your taste:
+7. Configurate extension according to up taste:
 
 ![Settings preview](https://i.imghippo.com/files/z6nsY1729003954.png)
 ## Installation (Firefox)
 1. Install from Firefox [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
-2. Configurate extension according to your taste:
+2. Configurate extension according to up taste:
 
 ![Settings preview](https://i.imghippo.com/files/JAaud1729007196.png)
 ## Compatibility
@@ -26,7 +26,7 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 - Everything is good!
 
 **⚠️ Firefox | 1.10.0** 
-- Available for download in [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
+- Available for downloading in [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
 - There may be errors, please report them
 
 **❓ Microsoft Edge | Need info**
