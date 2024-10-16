@@ -1,4 +1,9 @@
 # Changelog
+## 1.10.x
+- Updated animations
+- New project icon
+- Optimizations of index.js
+- Added footer
 ## 1.9.x
 - Source button in popup
 - New CSS style

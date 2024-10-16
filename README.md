@@ -25,10 +25,12 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 **Google Chrome | Latest**
 - Everything is working and tested
 
-**Firefox | 1.8.1** 
+**Firefox | 1.9.1** 
 - Available for download in [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
 - Color changing broken. Pending updates
 ## Gallery
-![Preview](https://i.imghippo.com/files/SWWeX1729003938.png)
+![Preview](https://i.ibb.co/qrbjtx0/chrome-UMNBQo-ZBUr.png)
 ## License
 MIT license | Copyright (c) 2023-2024 ShamHyper
+## Logo
+![Logo](https://i.ibb.co/W69hJpf/icon.png)

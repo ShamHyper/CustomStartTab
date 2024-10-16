@@ -3,8 +3,12 @@ console.log("Started custom tab");
 const canvas = document.getElementById("starry-sky");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resizeCanvas();
 
 const stars = [];
 const numStars = 100;
@@ -35,7 +39,7 @@ function drawStars() {
         }
     });
 
-    requestAnimationFrame(drawStars);
+    requestIdleCallback(drawStars);
 }
 
 function applyBackgroundColors() {
@@ -46,18 +50,24 @@ function applyBackgroundColors() {
 
 applyBackgroundColors();
 
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
+window.addEventListener('resize', debounce(resizeCanvas, 200));
 
-document.getElementById('search-input').addEventListener('keypress', function (event) {
-    if (event.key === 'Enter') {
+function debounce(func, wait) {
+    let timeout;
+    return function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(func, wait);
+    };
+}
+
+function handleSearch(event) {
+    if (event.key === 'Enter' || event.type === 'click') {
         search();
     }
-});
+}
 
-document.getElementById('search-button').addEventListener('click', search);
+document.getElementById('search-input').addEventListener('keypress', handleSearch);
+document.getElementById('search-button').addEventListener('click', handleSearch);
 
 const checkboxes = {
     google: document.getElementById('google-checkbox'),
@@ -72,17 +82,19 @@ function loadSearchOptions() {
 }
 
 Object.keys(checkboxes).forEach(engine => {
-    checkboxes[engine].addEventListener('change', () => {
-        if (checkboxes[engine].checked) {
-            Object.keys(checkboxes).forEach(otherEngine => {
-                if (otherEngine !== engine) {
-                    checkboxes[otherEngine].checked = false;
-                }
-            });
-            saveSearchOption(engine);
-        }
-    });
+    checkboxes[engine].addEventListener('change', () => handleCheckboxChange(engine));
 });
+
+function handleCheckboxChange(engine) {
+    if (checkboxes[engine].checked) {
+        Object.keys(checkboxes).forEach(otherEngine => {
+            if (otherEngine !== engine) {
+                checkboxes[otherEngine].checked = false;
+            }
+        });
+        saveSearchOption(engine);
+    }
+}
 
 function saveSearchOption(engine) {
     localStorage.setItem('searchEngine', engine);
@@ -145,11 +157,9 @@ async function getWeather() {
     if (navigator.geolocation) {
         console.log("Starting navigator")
         navigator.geolocation.getCurrentPosition(async (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            await fetchWeatherData(lat, lon);
-        }, (error) => {
-            console.error("Error getting location:", error);
+            const { latitude, longitude } = position.coords;
+            await fetchWeatherData(latitude, longitude);
+        }, () => {
             document.getElementById('weather-info').innerText = 'Unable to retrieve location.';
         });
     } else {
@@ -158,20 +168,13 @@ async function getWeather() {
 }
 
 async function fetchWeatherData(lat, lon) {
-    const weatherCacheKey = 'weather';
     const cacheKey = 'geocodeResponse';
     const cachedGeocode = getCachedData(cacheKey);
     
     if (cachedGeocode) {
-        const city = cachedGeocode.city || 'Unknown location';
-        console.log(`Geocode: ${city}`)
-        const weatherText = `${city} | ${cachedGeocode.weather}`;
-        document.getElementById('weather-info').innerText = weatherText;
-        
-        const cachedWeather = getCachedData(weatherCacheKey);
-        if (!cachedWeather) {
-            console.log("Weather cache expired, updating now");
-            await updateWeatherData(lat, lon, city, weatherCacheKey);
+        updateWeatherDisplay(cachedGeocode.city, cachedGeocode.weather);
+        if (!getCachedData('weather')) {
+            await updateWeatherData(lat, lon, cachedGeocode.city);
         }
         return;
     }
@@ -182,28 +185,28 @@ async function fetchWeatherData(lat, lon) {
         const geocodeData = await geocodeResponse.json();
         const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown location';
 
-        console.log("Fetching weather");
-        await updateWeatherData(lat, lon, city, weatherCacheKey);
-    } catch (error) {
-        console.error("Error fetching weather data:", error);
+        await updateWeatherData(lat, lon, city);
+    } catch {
         document.getElementById('weather-info').innerText = 'Error retrieving weather.';
     }
     console.log("Weather widget loaded");
 }
 
-async function updateWeatherData(lat, lon, city, weatherCacheKey) {
+async function updateWeatherData(lat, lon, city) {
     try {
         const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t&lang=en`);
         const weatherData = await weatherResponse.text();
-        const weatherText = `${city} | ${weatherData}`;
-
-        cacheData('geocodeResponse', { city, weather: weatherData }, 3600000); 
-        document.getElementById('weather-info').innerText = weatherText;
-        cacheData(weatherCacheKey, weatherText, 60000);
-    } catch (error) {
-        console.error("Error updating weather data:", error);
+        updateWeatherDisplay(city, weatherData);
+        cacheData('geocodeResponse', { city, weather: weatherData }, 3600000);
+        cacheData('weather', `${city} | ${weatherData}`, 60000);
+    } catch {
         document.getElementById('weather-info').innerText = 'Error retrieving weather.';
     }
+}
+
+function updateWeatherDisplay(city, weather) {
+    const weatherText = `${city} | ${weather}`;
+    document.getElementById('weather-info').innerText = weatherText;
 }
 
 async function getCurrencyRates() {
@@ -224,8 +227,7 @@ async function getCurrencyRates() {
         const ratesText = `BTC: $${btcRate} | ETH: $${ethRate} | TON: $${tonRate}`;
         document.getElementById('currency-info').innerText = ratesText;
         cacheData('currencyRates', ratesText, 300000);
-    } catch (error) {
-        console.error("Error fetching currency rates:", error);
+    } catch {
         document.getElementById('currency-info').innerText = 'Error retrieving currency rates.';
     }
     console.log("Currency widget loaded")
@@ -233,15 +235,21 @@ async function getCurrencyRates() {
 
 function updateTime() {
     const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = String(now.getFullYear()).padStart(2, '0');
-    document.getElementById('time-display').innerText = `${hours}:${minutes}:${seconds}`;
-    document.getElementById('date-display').innerText = `${day}.${month}.${year}`;
+    const timeText = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+    const dateText = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getFullYear()}`;
+    document.getElementById('time-display').innerText = timeText;
+    document.getElementById('date-display').innerText = dateText;
 }
+
+fetch('manifest.json')
+    .then(response => response.json())
+    .then(data => {
+        const version = data.version;
+        document.getElementById('footer-version').textContent = `CustomStartTab | v${version} | Made by ShamHyper `;
+    })
+    .catch(() => {
+        document.getElementById('footer-version').textContent = 'CustomStartTab | Made by ShamHyper';
+    });
 
 setInterval(updateTime, 1000);
 updateTime();
