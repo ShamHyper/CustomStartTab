@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⭐Star-tab⭐</title>
+    <title>New tab</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/png" href="icon.png">
 </head>
@@ -14,24 +14,24 @@
     <div class="date-container" id="date-display">00.00.00</div>
 
     <div class="search-container">
-        <input type="text" id="search-input" autocomplete="off" autocorrect="off" placeholder="Search...">
-        <button id="search-button"><img src="search.png" alt="Search"></button>
+        <input type="text" id="search-input" autocomplete="off" autocorrect="off" placeholder="Search..." aria-required="true" aria-label="Enter your search query">
+        <button id="search-button" aria-label="Search"><img src="search.png" alt="Search"></button>
     </div>
 
     <div class="search-options">
-        <label class="search-label">
+        <label class="search-label" aria-label="Search with Google">
             <input type="checkbox" id="google-checkbox">
             <span></span> Google
         </label>
-        <label class="search-label">
+        <label class="search-label" aria-label="Search with Yandex">
             <input type="checkbox" id="yandex-checkbox">
             <span></span> Yandex
         </label>
-        <label class="search-label">
+        <label class="search-label" aria-label="Search with DuckDuckGo">
             <input type="checkbox" id="duckduckgo-checkbox">
             <span></span> DuckDuckGo
         </label>
-        <label class="search-label">
+        <label class="search-label" aria-label="Search with Perplexity AI">
             <input type="checkbox" id="perplexity-checkbox">
             <span></span> Perplexity AI
         </label>
@@ -43,6 +43,9 @@
     <div class="currency-info" id="currency-info">
         Loading currency rates...
     </div>
+
+    <div class="footer" id="footer-version"></div>
+
     <canvas id="starry-sky"></canvas>
     <script src="index.js"></script>
 </body>
