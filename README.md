@@ -6,7 +6,7 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 **https://www.donationalerts.com/r/shamhyper0**
 
 **USDT(TRC20): TF7hWy4Si7RqNujZkJpc92z2THNCTPHZp6**
-## Installation (Chrome)
+## Installation (Chrome, Brave, Cent)
 1. Go to `chrome://extensions/`
 2. Enable developer mode in the upper right corner
 3. Download [latest](https://github.com/ShamHyper/CustomStartTab/archive/refs/heads/main.zip) archive with code **OR** use git to download
@@ -22,12 +22,20 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 
 ![Settings preview](https://i.imghippo.com/files/JAaud1729007196.png)
 ## Compatibility
-**Google Chrome | Latest**
-- Everything is working and tested
+**✅ Google Chrome, Brave, Cent | 1.10.0**
+- Everything is good!
 
-**Firefox | 1.10.0** 
+**⚠️ Firefox | 1.10.0** 
 - Available for download in [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
-- Color changing broken. Pending updates
+- There may be errors, please report them
+
+**❓ Microsoft Edge | Need info**
+
+- Please contact me if you test the extension, I do not have such an opportunity.
+
+**❌ Opera, Yandex | Pending, update is not planned yet**
+- Compatibility errors
+- Problems at installation 
 ## Gallery
 ![Preview](https://i.ibb.co/qrbjtx0/chrome-UMNBQo-ZBUr.png)
 ## License
