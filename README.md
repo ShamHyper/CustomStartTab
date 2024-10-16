@@ -22,12 +22,13 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 
 ![Settings preview](https://i.imghippo.com/files/JAaud1729007196.png)
 ## Compatibility
-**✅ Google Chrome, Brave, Cent | 1.10.0**
+**✅ Google Chrome, Brave, Cent**
 - Everything is good!
 
-**⚠️ Firefox | 1.10.0** 
+**⚠️ Firefox** 
 - Available for downloading in [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
 - There may be errors, please report them
+- Version may be outdated
 
 **❓ Microsoft Edge | Need info**
 

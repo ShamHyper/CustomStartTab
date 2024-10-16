@@ -51,6 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (canvas) {
             canvas.style.background = `linear-gradient(to bottom, ${defaultTopColor}, ${defaultBottomColor})`;
         }
+
+        document.getElementById('planetToggle').checked = false;
+        localStorage.setItem('showPlanets', false);
     });
 
     const savedStarColor = localStorage.getItem('starColor') || 'rgb(255, 255, 255)';
@@ -60,4 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setInputsFromRgb(savedStarColor, document.getElementById('starR'), document.getElementById('starG'), document.getElementById('starB'));
     setInputsFromRgb(savedTopColor, document.getElementById('topR'), document.getElementById('topG'), document.getElementById('topB'));
     setInputsFromRgb(savedBottomColor, document.getElementById('bottomR'), document.getElementById('bottomG'), document.getElementById('bottomB'));
+
+    const showPlanets = localStorage.getItem('showPlanets') === 'true';
+    document.getElementById('planetToggle').checked = showPlanets;
+
+    document.getElementById('planetToggle').addEventListener('change', (event) => {
+        localStorage.setItem('showPlanets', event.target.checked);
+        localStorage.setItem('showPlanets', event.target.checked);
+    });
 });

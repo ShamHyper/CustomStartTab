@@ -13,6 +13,9 @@ resizeCanvas();
 const stars = [];
 const numStars = 100;
 
+const planets = [];
+const numPlanets = 5;
+
 for (let i = 0; i < numStars; i++) {
     stars.push({
         x: Math.random() * canvas.width,
@@ -22,24 +25,72 @@ for (let i = 0; i < numStars; i++) {
     });
 }
 
-function drawStars() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+for (let i = 0; i < numPlanets; i++) {
+    planets.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 15,
+        speed: Math.random() * 0.5 + 0.1,
+        color: `hsl(${Math.random() * 360}, 15%, 70%)` // planets color britness
+    });
+}
 
+function drawStarsAndPlanets() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
     const starColor = localStorage.getItem('starColor') || 'white';
-    ctx.fillStyle = starColor;
+    const fadeStartHeight = canvas.height * 0.9;
 
     stars.forEach((star) => {
+        let fadeOutFactor = 1;
+
+        if (star.y > fadeStartHeight) {
+            fadeOutFactor = Math.max(0, 1 - ((star.y - fadeStartHeight) / (canvas.height - fadeStartHeight)));
+        }
+
+        ctx.globalAlpha = fadeOutFactor;
+        ctx.fillStyle = starColor;
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = starColor;
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
         ctx.fill();
+
         star.y += star.speed;
         if (star.y > canvas.height) {
-            star.y = 0;
+            star.y = -star.radius;
             star.x = Math.random() * canvas.width;
         }
     });
 
-    requestIdleCallback(drawStars);
+    const showPlanets = localStorage.getItem('showPlanets') != 'true';
+    if (showPlanets) {
+        planets.forEach((planet) => {
+            let fadeOutFactor = 1;
+
+            if (planet.y > fadeStartHeight) {
+                fadeOutFactor = Math.max(0, 1 - ((planet.y - fadeStartHeight) / (canvas.height - fadeStartHeight)));
+            }
+
+            ctx.globalAlpha = fadeOutFactor;
+            ctx.fillStyle = planet.color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = planet.color;
+            ctx.beginPath();
+            ctx.arc(planet.x, planet.y, planet.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            planet.y += planet.speed;
+            if (planet.y > canvas.height) {
+                planet.y = -planet.radius * 2;
+                planet.x = Math.random() * canvas.width;
+            }
+        });
+    }
+
+    ctx.globalAlpha = 1;
+
+    requestAnimationFrame(drawStarsAndPlanets);
 }
 
 function applyBackgroundColors() {
@@ -256,4 +307,4 @@ updateTime();
 getWeather();
 getCurrencyRates();
 loadSearchOptions();
-drawStars();
+drawStarsAndPlanets();

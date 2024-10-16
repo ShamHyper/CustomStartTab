@@ -1,4 +1,7 @@
 # Changelog
+## 1.11.x
+- Added planets
+- Animations optimization for Firefox
 ## 1.10.x
 - Updated animations
 - New project icon

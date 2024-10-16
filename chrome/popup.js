@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (canvas) {
             canvas.style.background = `linear-gradient(to bottom, ${defaultTopColor}, ${defaultBottomColor})`;
         }
+
+        document.getElementById('planetToggle').checked = false;
+        localStorage.setItem('showPlanets', false);
     });
 
     const savedStarColor = localStorage.getItem('starColor') || '#ffffff';
@@ -44,4 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('colorPicker').value = savedStarColor;
     document.getElementById('bgTopColor').value = savedTopColor;
     document.getElementById('bgBottomColor').value = savedBottomColor;
+
+    const showPlanets = localStorage.getItem('showPlanets') === 'true';
+    document.getElementById('planetToggle').checked = showPlanets;
+
+    document.getElementById('planetToggle').addEventListener('change', (event) => {
+        localStorage.setItem('showPlanets', event.target.checked);
+    });
 });
