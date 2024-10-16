@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Custom Start Tab",
     "description": "Custom start tab by ShamHyper",
-    "version": "1.11.1",
+    "version": "1.11.2",
     "action": {
         "default_popup": "popup.html",
         "default_icon": "icon.png"

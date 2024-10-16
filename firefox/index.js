@@ -37,7 +37,7 @@ for (let i = 0; i < numPlanets; i++) {
 
 function drawStarsAndPlanets() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     const starColor = localStorage.getItem('starColor') || 'white';
     const fadeStartHeight = canvas.height * 0.9;
 
@@ -202,7 +202,7 @@ async function getWeather() {
     console.log("Starting getWeather");
     const cacheKey = 'weather';
     const cachedWeather = getCachedData(cacheKey);
-    
+
     if (cachedWeather) {
         document.getElementById('weather-info').innerText = cachedWeather;
         return;
@@ -224,7 +224,7 @@ async function getWeather() {
 async function fetchWeatherData(lat, lon) {
     const cacheKey = 'geocodeResponse';
     const cachedGeocode = getCachedData(cacheKey);
-    
+
     if (cachedGeocode) {
         updateWeatherDisplay(cachedGeocode.city, cachedGeocode.weather);
         if (!getCachedData('weather')) {
@@ -237,13 +237,13 @@ async function fetchWeatherData(lat, lon) {
         console.log("Fetching geocode");
         const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en`);
         const geocodeData = await geocodeResponse.json();
-    
+
         const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || geocodeData.address.municipality || geocodeData.address.state || geocodeData.address.country || 'Unknown location';
         console.log("Detected city:", city);
-    
+
         await updateWeatherData(lat, lon, city);
     } catch (error) {
-        console.error(error); 
+        console.error(error);
         document.getElementById('weather-info').innerText = 'Error retrieving weather.';
     }
     console.log("Weather widget loaded");
@@ -251,30 +251,58 @@ async function fetchWeatherData(lat, lon) {
 
 async function updateWeatherData(lat, lon, city) {
     try {
-        const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t&lang=en`);
-        const weatherData = await weatherResponse.text();
-        
-        if (weatherData.includes('Unknown location')) {
-            console.warn("Unknown location in wttr API, using open-meteo")
-            const openMeteoResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-            const openMeteoData = await openMeteoResponse.json();
-            const temperature = openMeteoData.current_weather.temperature;
-            const weatherCode = openMeteoData.current_weather.weathercode; 
+        const wttrPromise = fetch(`https://wttr.in/${city}?format=%C+%t&lang=en`);
+        const openMeteoPromise = fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
 
-            const weatherDescription = getWeatherDescription(weatherCode);
+        const response = await Promise.race([wttrPromise, openMeteoPromise]);
 
-            const openMeteoWeather = `${weatherDescription}, ${temperature}°C`;
-            updateWeatherDisplay(city, openMeteoWeather);
-            cacheData('geocodeResponse', { city, weather: openMeteoWeather }, 3600000);
-            cacheData('weather', `${city} | ${openMeteoWeather}`, 60000);
+        if (response.ok) {
+            if (response.url.includes('wttr.in')) {
+                const weatherData = await response.text();
+                console.log("Using WTTR-API for weather data"); 
+                if (weatherData.includes('Unknown location')) {
+                    console.warn("Unknown location in WTTR-API, trying open-meteo");
+                    await fetchOpenMeteoWeather(lat, lon, city);
+                } else {
+                    updateWeatherDisplay(city, weatherData);
+                    cacheData('geocodeResponse', { city, weather: weatherData }, 3600000);
+                    cacheData('weather', `${city} | ${weatherData}`, 60000);
+                }
+            } else {
+                console.warn("WTTR-API slow! Using Open-Meteo for weather data"); 
+                await fetchOpenMeteoWeather(lat, lon, city);
+            }
         } else {
-            updateWeatherDisplay(city, weatherData);
-            cacheData('geocodeResponse', { city, weather: weatherData }, 3600000);
-            cacheData('weather', `${city} | ${weatherData}`, 60000);
+            console.warn("First API call failed, trying WTTR-API");
+            await fetchOpenMeteoWeather(lat, lon, city);
         }
-    } catch {
+    } catch (error) {
         document.getElementById('weather-info').innerText = 'Error retrieving weather.';
-        console.error("Error retrieving weather")
+        console.error("Error retrieving weather", error);
+    }
+}
+
+async function fetchOpenMeteoWeather(lat, lon, city) {
+    try {
+        const openMeteoResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        if (!openMeteoResponse.ok) throw new Error("Open-Meteo API unavailable");
+
+        const openMeteoData = await openMeteoResponse.json();
+        let temperature = Math.round(openMeteoData.current_weather.temperature);
+
+        if (temperature >= 0) {
+            temperature = `+${temperature}`;
+        }
+
+        const weatherCode = openMeteoData.current_weather.weathercode;
+        const weatherDescription = getWeatherDescription(weatherCode);
+        const openMeteoWeather = `${weatherDescription} ${temperature}°C`;
+        updateWeatherDisplay(city, openMeteoWeather);
+        cacheData('geocodeResponse', { city, weather: openMeteoWeather }, 3600000);
+        cacheData('weather', `${city} | ${openMeteoWeather}`, 60000);
+    } catch (error) {
+        document.getElementById('weather-info').innerText = 'Error retrieving weather from open-meteo.';
+        console.error("Error retrieving weather from open-meteo", error);
     }
 }
 
@@ -298,7 +326,7 @@ function getWeatherDescription(code) {
         95: 'Thunderstorm',
         99: 'Thunderstorm with hail'
     };
-    
+
     return descriptions[code] || 'Unknown weather condition';
 }
 
