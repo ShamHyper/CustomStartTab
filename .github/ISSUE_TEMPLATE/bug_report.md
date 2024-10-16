@@ -27,10 +27,7 @@ Put your error here using "```"
 
 **PC specs:**
  - OS: [e.g. Windows 10 Pro]
- - GPU: [e.g. GTX 1080]
- - RAM: [e.g. 8 GB]
- - MultiAI Version: [e.g. 1.5.1]
- - Python Version: [e.g. 3.9]
+ - Browser: [Google Chrome]
  - etc.
 
 **Additional context**
