@@ -1,4 +1,4 @@
-console.log("Started custom tab");
+console.log("[CST] Started custom tab!");
 
 const canvas = document.getElementById("starry-sky");
 const ctx = canvas.getContext("2d");
@@ -199,7 +199,6 @@ function getCachedData(key) {
 }
 
 async function getWeather() {
-    console.log("Starting getWeather");
     const cacheKey = 'weather';
     const cachedWeather = getCachedData(cacheKey);
 
@@ -208,8 +207,10 @@ async function getWeather() {
         return;
     }
 
+    console.log("[CST] Starting getWeather");
+
     if (navigator.geolocation) {
-        console.log("Starting navigator");
+        console.log("[CST] Starting navigator");
         navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
             await fetchWeatherData(latitude, longitude);
@@ -234,19 +235,19 @@ async function fetchWeatherData(lat, lon) {
     }
 
     try {
-        console.log("Fetching geocode");
+        console.log("[CST] Fetching geocode");
         const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en`);
         const geocodeData = await geocodeResponse.json();
 
         const city = geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || geocodeData.address.municipality || geocodeData.address.state || geocodeData.address.country || 'Unknown location';
-        console.log("Detected city:", city);
+        console.log("[LOG] Detected city:", city);
 
         await updateWeatherData(lat, lon, city);
     } catch (error) {
         console.error(error);
         document.getElementById('weather-info').innerText = 'Error retrieving weather.';
     }
-    console.log("Weather widget loaded");
+    console.log("[CST] Weather widget loaded");
 }
 
 async function updateWeatherData(lat, lon, city) {
@@ -259,9 +260,9 @@ async function updateWeatherData(lat, lon, city) {
         if (response.ok) {
             if (response.url.includes('wttr.in')) {
                 const weatherData = await response.text();
-                console.log("Using WTTR-API for weather data"); 
+                console.log("[CST] Using WTTR-API for weather data"); 
                 if (weatherData.includes('Unknown location')) {
-                    console.warn("Unknown location in WTTR-API, trying open-meteo");
+                    console.warn("[CST] Unknown location in WTTR-API, trying open-meteo");
                     await fetchOpenMeteoWeather(lat, lon, city);
                 } else {
                     updateWeatherDisplay(city, weatherData);
@@ -269,16 +270,16 @@ async function updateWeatherData(lat, lon, city) {
                     cacheData('weather', `${city} | ${weatherData}`, 60000);
                 }
             } else {
-                console.warn("WTTR-API slow! Using Open-Meteo for weather data"); 
+                console.warn("[CST] WTTR-API slow! Using Open-Meteo for weather data"); 
                 await fetchOpenMeteoWeather(lat, lon, city);
             }
         } else {
-            console.warn("First API call failed, trying WTTR-API");
+            console.warn("[CST] First API call failed, trying WTTR-API");
             await fetchOpenMeteoWeather(lat, lon, city);
         }
     } catch (error) {
         document.getElementById('weather-info').innerText = 'Error retrieving weather.';
-        console.error("Error retrieving weather", error);
+        console.error("[CST] Error retrieving weather", error);
     }
 }
 
@@ -302,7 +303,7 @@ async function fetchOpenMeteoWeather(lat, lon, city) {
         cacheData('weather', `${city} | ${openMeteoWeather}`, 60000);
     } catch (error) {
         document.getElementById('weather-info').innerText = 'Error retrieving weather from open-meteo.';
-        console.error("Error retrieving weather from open-meteo", error);
+        console.error("[CST] Error retrieving weather from open-meteo", error);
     }
 }
 
@@ -356,7 +357,7 @@ async function getCurrencyRates() {
     } catch {
         document.getElementById('currency-info').innerText = 'Error retrieving currency rates.';
     }
-    console.log("Currency widget loaded")
+    console.log("[CST] Currency widget loaded")
 }
 
 function updateTime() {

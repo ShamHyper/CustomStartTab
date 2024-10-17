@@ -29,7 +29,7 @@ Create a beautiful configurable "new" browser page, with widgets, a clock, and a
 - Available for downloading in [extension store](https://addons.mozilla.org/firefox/addon/custom-start-tab/)
 - There may be errors, please report them
 - Version may be outdated
-
+- Cursor trail doesn't work
 **❓ Microsoft Edge | Need info**
 
 - Please contact me if you test the extension, I do not have such an opportunity.

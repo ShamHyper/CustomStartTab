@@ -194,3 +194,27 @@ canvas {
         opacity: 1;
     }
 }
+
+.neon-trail {
+    position: fixed; 
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 100%;
+    box-shadow: 0 0 10px #ffffff, 0 0 20px #a3a3a3;
+    pointer-events: none;
+    animation: fade 0.125s linear forwards;
+    animation-timing-function: ease-in-out; 
+    z-index: 100;
+}
+
+@keyframes fade {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+}

@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('showPlanets', false);
         document.getElementById('starsToggle').checked = false;
         localStorage.setItem('showStars', false);
+        document.getElementById('trailToggle').checked = false;
+        localStorage.setItem('showTrail', false);
     });
 
     const savedStarColor = localStorage.getItem('starColor') || '#ffffff';
@@ -62,5 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('starsToggle').addEventListener('change', (event) => {
         localStorage.setItem('showStars', event.target.checked);
+    });
+
+    const showTrail = localStorage.getItem('showTrail') === 'true';
+    document.getElementById('trailToggle').checked = showTrail;
+
+    document.getElementById('trailToggle').addEventListener('change', (event) => {
+        localStorage.setItem('showTrail', event.target.checked);
     });
 });
