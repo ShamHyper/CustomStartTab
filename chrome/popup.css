@@ -3,7 +3,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    width: 300px;
+    width: 350px;
+    height: 100%;
     background-color: #202124;
     color: white;
     font-family: Arial, sans-serif;
@@ -12,7 +13,7 @@ body {
 }
 
 input[type="color"] {
-    width: 100px;
+    width: 120px;
     height: 40px;
     border: none;
     cursor: pointer;
@@ -24,7 +25,7 @@ input[type="color"] {
 }
 
 label {
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 10px;
     color: #ffffff;
 }
@@ -38,7 +39,7 @@ button {
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.2s ease;
-    width: 100%;
+    width: 75%;
     margin: 5px 0;
     box-sizing: border-box;
 }
@@ -76,7 +77,7 @@ button:hover {
     border-radius: 5px;
     color: #ffffff;
     font-size: 16px;
-    width: 100%;
+    width: 75%;
     transition: background-color 0.2s ease;
     box-sizing: border-box;
 }

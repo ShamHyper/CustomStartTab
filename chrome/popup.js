@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('showStars', false);
         document.getElementById('trailToggle').checked = false;
         localStorage.setItem('showTrail', false);
+        document.getElementById('weatherToggle').checked = false;
+        localStorage.setItem('showWeather', false);
+        document.getElementById('cryptoToggle').checked = false;
+        localStorage.setItem('showCrypto', false);
     });
 
     const savedStarColor = localStorage.getItem('starColor') || '#ffffff';
@@ -71,5 +75,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('trailToggle').addEventListener('change', (event) => {
         localStorage.setItem('showTrail', event.target.checked);
+    });
+
+    const showWeather = localStorage.getItem('showWeather') === 'true';
+    document.getElementById('weatherToggle').checked = showWeather;
+
+    document.getElementById('weatherToggle').addEventListener('change', (event) => {
+        localStorage.setItem('showWeather', event.target.checked);
+    });
+
+    const showCrypto = localStorage.getItem('showCrypto') === 'true';
+    document.getElementById('cryptoToggle').checked = showCrypto;
+
+    document.getElementById('cryptoToggle').addEventListener('change', (event) => {
+        localStorage.setItem('showCrypto', event.target.checked);
     });
 });

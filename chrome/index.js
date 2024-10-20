@@ -252,41 +252,11 @@ async function fetchWeatherData(lat, lon) {
 
 async function updateWeatherData(lat, lon, city) {
     try {
-        const wttrPromise = fetch(`https://wttr.in/${city}?format=%C+%t&lang=en`);
-        const openMeteoPromise = fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-
-        const response = await Promise.race([wttrPromise, openMeteoPromise]);
-
-        if (response.ok) {
-            if (response.url.includes('wttr.in')) {
-                const weatherData = await response.text();
-                console.log("[CST] Using WTTR-API for weather data"); 
-                if (weatherData.includes('Unknown location')) {
-                    console.warn("[CST] Unknown location in WTTR-API, trying open-meteo");
-                    await fetchOpenMeteoWeather(lat, lon, city);
-                } else {
-                    updateWeatherDisplay(city, weatherData);
-                    cacheData('geocodeResponse', { city, weather: weatherData }, 3600000);
-                    cacheData('weather', `${city} | ${weatherData}`, 60000);
-                }
-            } else {
-                console.warn("[CST] WTTR-API slow! Using Open-Meteo for weather data"); 
-                await fetchOpenMeteoWeather(lat, lon, city);
-            }
-        } else {
-            console.warn("[CST] First API call failed, trying WTTR-API");
-            await fetchOpenMeteoWeather(lat, lon, city);
-        }
-    } catch (error) {
-        document.getElementById('weather-info').innerText = 'Error retrieving weather.';
-        console.error("[CST] Error retrieving weather", error);
-    }
-}
-
-async function fetchOpenMeteoWeather(lat, lon, city) {
-    try {
         const openMeteoResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-        if (!openMeteoResponse.ok) throw new Error("Open-Meteo API unavailable");
+
+        if (!openMeteoResponse.ok) {
+            throw new Error("Open-Meteo API unavailable");
+        }
 
         const openMeteoData = await openMeteoResponse.json();
         let temperature = Math.round(openMeteoData.current_weather.temperature);
@@ -297,35 +267,36 @@ async function fetchOpenMeteoWeather(lat, lon, city) {
 
         const weatherCode = openMeteoData.current_weather.weathercode;
         const weatherDescription = getWeatherDescription(weatherCode);
-        const openMeteoWeather = `${weatherDescription} ${temperature}°C`;
+        const openMeteoWeather = `${weatherDescription} | ${temperature}°C`;
+
         updateWeatherDisplay(city, openMeteoWeather);
         cacheData('geocodeResponse', { city, weather: openMeteoWeather }, 3600000);
         cacheData('weather', `${city} | ${openMeteoWeather}`, 60000);
     } catch (error) {
-        document.getElementById('weather-info').innerText = 'Error retrieving weather from open-meteo.';
-        console.error("[CST] Error retrieving weather from open-meteo", error);
+        document.getElementById('weather-info').innerText = 'Error retrieving weather.';
+        console.error("[CST] Error retrieving weather", error);
     }
 }
 
 function getWeatherDescription(code) {
     const descriptions = {
-        0: 'Clear sky',
-        1: 'Mainly clear',
-        2: 'Partly cloudy',
-        3: 'Overcast',
-        45: 'Fog',
-        48: 'Depositing rime fog',
-        51: 'Light drizzle',
-        53: 'Moderate drizzle',
-        55: 'Dense drizzle',
-        61: 'Slight rain',
-        63: 'Moderate rain',
-        65: 'Heavy rain',
-        71: 'Slight snow fall',
-        73: 'Moderate snow fall',
-        75: 'Heavy snow fall',
-        95: 'Thunderstorm',
-        99: 'Thunderstorm with hail'
+        0: '🌇Clear sky',
+        1: '🌤️Mainly clear',
+        2: '⛅Partly cloudy',
+        3: '☁️Overcast',
+        45: '🌫️Fog',
+        48: '🌁Depositing rime fog',
+        51: '🌂Light drizzle',
+        53: '☂️Moderate drizzle',
+        55: '☔Dense drizzle',
+        61: '🌦️Slight rain',
+        63: '🌧️Moderate rain',
+        65: '🌧️Heavy rain',
+        71: '🌨️Slight snow fall',
+        73: '🌨️Moderate snow fall',
+        75: '❄️Heavy snow fall',
+        95: '⛈️Thunderstorm',
+        99: '⚡Thunderstorm with hail'
     };
 
     return descriptions[code] || 'Unknown weather condition';
@@ -382,10 +353,10 @@ fetch('manifest.json')
 const showTrail = localStorage.getItem('showTrail') != 'true';
 
 if (showTrail) {
-    document.addEventListener('mousemove', function(e) {
+    document.addEventListener('mousemove', function (e) {
         const trail = document.createElement('div');
         trail.classList.add('neon-trail');
-        trail.style.top = e.clientY - 5 + 'px'; 
+        trail.style.top = e.clientY - 5 + 'px';
         trail.style.left = e.clientX - 5 + 'px';
         document.body.appendChild(trail);
 
@@ -395,9 +366,30 @@ if (showTrail) {
     });
 }
 
+const showWeather = localStorage.getItem('showWeather') != 'true';
+const showCrypto = localStorage.getItem('showCrypto') != 'true';
+
+function hideWeatherInfo() {
+    document.getElementById('weather-info').style.display = 'none';
+}
+
+function hideCryptoInfo() {
+    document.getElementById('currency-info').style.display = 'none';
+}
+
+if (!showWeather) {
+    hideWeatherInfo();
+} else {
+    getWeather();
+}
+
+if (!showCrypto) {
+    hideCryptoInfo();
+} else {
+    getCurrencyRates();
+}
+
 setInterval(updateTime, 1000);
 updateTime();
-getWeather();
-getCurrencyRates();
 loadSearchOptions();
 drawStarsAndPlanets();

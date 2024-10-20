@@ -1,13 +1,16 @@
 # Changelog
 ## 1.12.x
+- Better logging
 - Cursor trail
+- Better weather widget
+- New search icon
+- Widgets hide options
 ## 1.11.x
 - Added planets
 - Animations optimization for Firefox
 - Stars toggle checkbox
 - Second weather API, in case of a WTTR crash
 - Using Promise to choose fastest weather API
-- Better logging
 ## 1.10.x
 - Updated animations
 - New project icon
